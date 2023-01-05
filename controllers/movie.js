@@ -20,21 +20,30 @@ exports.getTopRate = (req, res, next) => {
 };
 
 exports.getGenre = (req, res, next) => {
-  if (!req.query.genre) {
+  const genreId = +req.query.genre;
+  if (!genreId) {
     return res.status(400).json("Not found genre param");
   }
-  Movies.fetchAll((movieList) => {
-    const movieListByGenre = movieList.filter((movie) =>
-      movie.genre_ids.includes(+req.query.genre)
-    );
-    if (movieListByGenre.length === 0) {
-      return res.status(400).json("Not found that genre id!");
+
+  Movies.getGenre(genreId, (movieByGenre, genreName) => {
+    if (movieByGenre.length === 0) {
+      return res.status(404).json("Not found that genre id!");
     }
-    const pagedList = paginator(movieListByGenre, req.query.page, 10);
-    Movies.getGenreName((genreNames) => {
-      const genreName = genreNames.filter((g) => g.id === +req.query.genre);
-      pagedList.genre_name = genreName[0].name;
-      res.json(pagedList);
-    });
+    const results = paginator(movieByGenre, req.query.page, 10);
+    results.genre_name = genreName;
+    res.status(200).json(results);
+  });
+};
+
+exports.getSearch = (req, res, next) => {
+  const keyword = req.query.keyword;
+  if (!keyword) {
+    return res.status(400).json("Not found keyword param");
+  }
+  Movies.getSearch(keyword, (result) => {
+    if (result.length === 0) {
+      return res.status(404).json("No matching results were found!");
+    }
+    res.json(result);
   });
 };

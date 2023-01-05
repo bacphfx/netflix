@@ -25,13 +25,36 @@ module.exports = class Movies {
     });
   }
 
-  static getGenreName(cb) {
-    fs.readFile(genrePath, (err, fileContent) => {
-      const genreList = JSON.parse(fileContent);
-      if (err) {
+  static getGenre(genreId, cb) {
+    this.fetchAll((movies) => {
+      const movieByGenre = movies.filter((movie) =>
+        movie.genre_ids.includes(genreId)
+      );
+      fs.readFile(genrePath, (err, fileContent) => {
+        const genreNames = JSON.parse(fileContent);
+        if (!err) {
+          const genreName = genreNames.filter((g) => g.id === genreId)[0].name;
+          cb(movieByGenre, genreName);
+        } else {
+          cb(null);
+        }
+      });
+    });
+  }
+
+  static getSearch(keyword, cb) {
+    this.fetchAll((movies) => {
+      const searchResult = movies.filter((movie) => {
+        return (
+          (movie.title
+            ? movie.title.includes(keyword)
+            : movie.name.includes(keyword)) || movie.overview.includes(keyword)
+        );
+      });
+      if (!searchResult) {
         cb(null);
       } else {
-        cb(genreList);
+        cb(searchResult);
       }
     });
   }
