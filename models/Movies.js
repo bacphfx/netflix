@@ -13,7 +13,7 @@ const genrePath = path.join(
   "genreList.json"
 );
 
-module.exports = class Movie {
+module.exports = class Movies {
   static fetchAll(cb) {
     fs.readFile(moviePath, (err, fileContent) => {
       const movieList = JSON.parse(fileContent);
