@@ -33,10 +33,13 @@ module.exports = class Movies {
       fs.readFile(genrePath, (err, fileContent) => {
         const genreNames = JSON.parse(fileContent);
         if (!err) {
-          const genreName = genreNames.filter((g) => g.id === genreId)[0].name;
-          cb(movieByGenre, genreName);
-        } else {
-          cb(null);
+          const genreName = genreNames.filter((g) => g.id === genreId)[0];
+          if (!genreName) {
+            cb(null);
+          } else {
+            const name = genreName.name;
+            cb(movieByGenre, name);
+          }
         }
       });
     });

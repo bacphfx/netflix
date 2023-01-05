@@ -25,12 +25,12 @@ exports.getGenre = (req, res, next) => {
     return res.status(400).json("Not found genre param");
   }
 
-  Movies.getGenre(genreId, (movieByGenre, genreName) => {
-    if (movieByGenre.length === 0) {
+  Movies.getGenre(genreId, (movieByGenre, name) => {
+    if (!movieByGenre) {
       return res.status(404).json("Not found that genre id!");
     }
     const results = paginator(movieByGenre, req.query.page, 10);
-    results.genre_name = genreName;
+    results.genre_name = name;
     res.status(200).json(results);
   });
 };
@@ -44,6 +44,6 @@ exports.getSearch = (req, res, next) => {
     if (result.length === 0) {
       return res.status(404).json("No matching results were found!");
     }
-    res.json(result);
+    res.status(200).json(result);
   });
 };
