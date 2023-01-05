@@ -14,12 +14,9 @@ exports.getVideos = (req, res, next) => {
     }
     const validVideo = videoById.videos.filter(
       (video) =>
-        (video.official === true &&
-          video.site === "YouTube" &&
-          video.type === "Teaser") ||
-        (video.official === true &&
-          video.site === "YouTube" &&
-          video.type === "Trailer")
+        video.official === true &&
+        video.site === "YouTube" &&
+        ["Trailer", "Teaser"].includes(video.type)
     );
     if (validVideo.length > 1) {
       const videoByDate = validVideo.sort(
