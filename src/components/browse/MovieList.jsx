@@ -3,7 +3,6 @@ import axios from "../../utils/axios";
 import movieTrailer from "movie-trailer";
 import MovieDetail from "../../components/browse/MovieDetail";
 import "./MovieList.css";
-import requests from "../../utils/requests";
 
 const base_url = "https://image.tmdb.org/t/p/original";
 
@@ -56,11 +55,7 @@ function MovieList({ title, fetchUrl, isLargeRow }) {
       </div>
       <div style={{ padding: "40px" }}>
         {selectedMovie && (
-          <MovieDetail
-            movieData={selectedMovie}
-            movieTrailer={trailerUrl}
-            url={requests.fetVideo}
-          />
+          <MovieDetail movieData={selectedMovie} movieTrailer={trailerUrl} />
         )}
       </div>
     </div>
