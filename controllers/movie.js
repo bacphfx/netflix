@@ -1,6 +1,14 @@
 const Movies = require("../models/Movies");
 const paginator = require("../utils/paging");
 
+exports.getRandomMovies = (req, res, next) => {
+  Movies.fetchAll((movieList) => {
+    const randomNum = Math.floor(Math.random() * (movieList.length / 10));
+    const randomMovies = paginator(movieList, randomNum, 10);
+    res.status(200).json(randomMovies);
+  });
+};
+
 exports.getTrending = (req, res, next) => {
   Movies.fetchAll((movieList) => {
     const trendingList = movieList.sort((a, b) => b.popularity - a.popularity);
@@ -44,6 +52,6 @@ exports.getSearch = (req, res, next) => {
     if (result.length === 0) {
       return res.status(404).json("No matching results were found!");
     }
-    res.status(200).json(result);
+    res.status(200).json({ results: result });
   });
 };
