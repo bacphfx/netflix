@@ -1,4 +1,3 @@
-const Movies = require("../models/Movies");
 const Videos = require("../models/Videos");
 
 exports.getVideos = (req, res, next) => {
